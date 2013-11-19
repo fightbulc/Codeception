@@ -176,8 +176,12 @@
                 $this->client->setServerParameter("HTTP_$header", $val);
             }
 
-            $url = $this->config['url'];
+            $rpcParts = explode('.', strtolower($methodName));
+            $domain = $rpcParts[0];
+            $resource = $rpcParts[1];
+
             $version = $this->config['version'];
+            $url = trim($this->config['url'], '/') . '/' . $domain;
 
             $payload = array(
                 "jsonrpc" => $version,
@@ -260,7 +264,7 @@
         {
             $resp_json = $this->_decodeJson($this->response, TRUE);
             \PHPUnit_Framework_Assert::assertTrue(
-                $this->arrayHasArray($json, $resp_json),
+                $this->arrayHasArray($json, isset($resp_json['error']) ? $resp_json['error'] : $resp_json['result']),
                 "response JSON matches provided"
             );
         }
