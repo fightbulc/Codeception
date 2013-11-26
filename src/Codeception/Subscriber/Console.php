@@ -97,9 +97,8 @@
                     ->append("\n")
                     ->write();
 
-                $this->message("<comment>Trying to</comment> <focus>%s</focus> ")
+                $this->message("- <focus>%s</focus>\n- ")
                     ->with($test->getFeature())
-                    ->width(146)
                     ->write();
 
             }
