@@ -92,15 +92,6 @@
 
             if ($test->getFeature())
             {
-                $this->message("%s")
-                    ->with($filename)
-                    ->append("\n")
-                    ->write();
-
-                $this->message("- <focus>%s</focus>\n- ")
-                    ->with($test->getFeature())
-                    ->write();
-
             }
             else
             {
@@ -128,21 +119,28 @@
         {
             if ($this->isDetailed($e->getTest()))
             {
-                $this->message('<fg=white;bg=green> PASSED </fg=white;bg=green>')
+                $this->message('<fg=white;bg=green> P </fg=white;bg=green>')
                     ->center(' ')
                     ->style('ok')
-                    ->append("\n")
-                    ->writeln();
+                    ->write();
 
                 return;
             }
-            $this->message('<fg=white;bg=green> Ok </fg=white;bg=green>')
-                ->append("\n")
-                ->writeln();
+            $this->message('<fg=white;bg=green> + </fg=white;bg=green>')
+                ->write();
         }
 
         public function endTest(\Codeception\Event\Test $e)
         {
+            $test = $e->getTest();
+            $filename = $test->getFileName();
+
+            if ($test->getFeature())
+            {
+                $this->message(" --> <focus>%s</focus>")
+                    ->with($test->getFeature())
+                    ->writeln();
+            }
             $this->printedTest = NULL;
         }
 
@@ -159,36 +157,32 @@
             }
             if ($this->isDetailed($e->getTest()))
             {
-                $this->message(' FAIL ')
+                $this->message(' F ')
                     ->center(' ')
                     ->style('error')
-                    ->append("\n")
-                    ->writeln();
+                    ->write();
 
                 return;
             }
-            $this->message(' Fail ')
+            $this->message(' F ')
                 ->style('error')
-                ->append("\n")
-                ->writeln();
+                ->write();
         }
 
         public function testError(\Codeception\Event\Fail $e)
         {
             if ($this->isDetailed($e->getTest()))
             {
-                $this->message(' ERROR ')
+                $this->message(' E ')
                     ->center(' ')
                     ->style('error')
-                    ->append("\n")
-                    ->writeln();
+                    ->write();
 
                 return;
             }
-            $this->message(' Error ')
+            $this->message(' E ')
                 ->style('error')
-                ->append("\n")
-                ->writeln();
+                ->write();
         }
 
         public function testSkipped(\Codeception\Event\Fail $e)
@@ -250,6 +244,7 @@
         {
             $this->message()
                 ->width(150, '-')
+                ->prepend("\n")
                 ->writeln();
         }
 
